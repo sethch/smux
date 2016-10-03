@@ -1,0 +1,7 @@
+Useful executables:
+1.	/bin/gnome-terminal
+2.	/bin/gnome-shell
+
+Useful functions:
+1. 	fork->exec(shell)			 // Likely shell = /bin/gnome-shell
+2.	signal(SIGCHLD, sig_handler) // Catch the signal from background children to quit. sig_handler should call waitpid.

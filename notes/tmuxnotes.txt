@@ -1,0 +1,21 @@
+This is my research for making a terminal multiplexor.
+
+Overview:
+Wikipedia: A terminal multiplexer is an app that can be used to multiplex several virtual consoles. Allows a user to access multiple separate login sessions inside a single terminal window, or detach and reattach sessions from a terminal.
+
+Features -
+1: Access multiple login sessions inside of a single window.
+2: Start applications from one computor, leave the computer, and continue using the same application immidiately on another computer. Processes are not sent a hangup signal (SIGHUP) and are therefore not terminated.
+3: Should be capable of working across different platforms/terminal types.
+4: Multiple windows, each of which run a single application. Windows are numbered, keyboard can be used to switch between them.
+5: Windows have their own scroll-back buffer, so output is captured even when the window is not actively displayed. 
+6: Session sharing - multiple computers can connect to the same session at once, enabling collaboration. Same computer can also be used to make multiple simultaneous connections. 
+
+Order of business:
+1. Learn about creating new terminal sessions/processes, also about login sessions.
+2. Implement simple program to create a new terminal session.
+3. Create a makefile. 
+4. Learn about switching between active terminal sessions and keeping track.
+5. Research possible options for graphically displaying the multiple login sessions. 
+6. Attempt to implement some sort of #4.
+7. Update this page to account for new required information.
