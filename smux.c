@@ -1,9 +1,8 @@
 #include "format.h"
 #include "smux.h"
+#include "graphics.h"
 #define CLEAR "\033[H\033[J"
 #define CLEAR2 "\033[47m\033[0m"
-#define CURSOR1 "\033[H
-#define CURSOR2 "\033[
 
 void sig_chld_handler(){
 	int status = 40;
@@ -30,6 +29,10 @@ void createShell(int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
 	signal(SIGCHLD, sig_chld_handler);
+	signal(SIGWINCH, sig_wnch_handler);
+	while(1){
+
+	}
 	startup(argc, argv);	
 	return 0;
 }

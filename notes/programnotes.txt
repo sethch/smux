@@ -1,7 +1,37 @@
-Useful executables:
-1.	/bin/gnome-terminal
-2.	/bin/gnome-shell
-
 Useful functions:
 1. 	fork->exec(shell)			 // Likely shell = /bin/gnome-shell
 2.	signal(SIGCHLD, sig_handler) // Catch the signal from background children to quit. sig_handler should call waitpid.
+
+Drawing with ANSI escape code:
+1. 033 is the ANSI escape code in octal
+2. https://en.wikipedia.org/wiki/ANSI_escape_code
+
+http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/
+
+ncurses.h: Library for writing text based UI
+1. Should begin with initscr() to init data structures.
+2. newterm(terminal type, FILE* terminal output, FILE* terminal input) for multi-screened applications
+3. endwin() before exiting each terminal
+
+Useful ncurses fxns:
+initscr() - Starts curses mode (MUST BE CALLED FIRST)
+refresh() - Prints input onto terminal
+clear()   - Clears screen
+endwin()  - Ends curses mode
+getch()   - Waits for user input
+keypad()  - Enables the reading of function keys (e.g. f1, f2... etc). keypad(stdscr, TRUE) to enable for the regular screen.
+raw()     - Disable line buffering (program will take input as it comes rather than with return)
+move()    - Moves cursor to position
+getmaxyx()- Gets number of rows and cols. getmaxyx(stdscr,row,col) where stdscr is the screen, row and col are ints to store these numbers in.
+
+Output ncurses fxns:
+addch()   - Print single character with attributes      
+printw()  - Print formatted output similar to printf(). mvprintw() moves cursor before printing.
+addstr()  - Print strings   
+
+Input ncurses fxns:
+getch()   - Get a character
+scanw()   - Get formatted input
+getstr()  - Get strings
+
+More reading to be done, use tldp website starting at section 7. 

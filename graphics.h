@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 #include <ncurses.h>
+#include <string.h>
 
 /*
  * Catches window change signal (SIGWNCH)

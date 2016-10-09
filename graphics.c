@@ -1,8 +1,6 @@
 #include "graphics.h"
 
 void sig_wnch_handler(){
-	signal(SIGWINCH, SIG_IGN);
-
 	endwin();
 	initscr();
 	refresh();
@@ -15,5 +13,4 @@ void sig_wnch_handler(){
 	int y = LINES / 2 - 1;
 	mvaddstr(y, x, tmp);
 	refresh();
-	signal(SIGWINCH, handle_winch);
 }

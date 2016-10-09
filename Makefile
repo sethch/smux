@@ -2,7 +2,7 @@ CC = gcc
 OBJECTS = smux.o graphics.o format.o
 
 smux : $(OBJECTS)
-	$(CC) -o smux $(OBJECTS)
+	$(CC) -o smux $(OBJECTS) -lncurses
 
 smux.o : smux.h graphics.h format.h
 graphics.o: graphics.h
