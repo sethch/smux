@@ -1,11 +1,3 @@
-Useful functions:
-1. 	fork->exec(shell)			 // Likely shell = /bin/gnome-shell
-2.	signal(SIGCHLD, sig_handler) // Catch the signal from background children to quit. sig_handler should call waitpid.
-
-Drawing with ANSI escape code:
-1. 033 is the ANSI escape code in octal
-2. https://en.wikipedia.org/wiki/ANSI_escape_code
-
 http://www.tldp.org/HOWTO/NCURSES-Programming-HOWTO/
 
 ncurses.h: Library for writing text based UI
@@ -23,6 +15,12 @@ keypad()  - Enables the reading of function keys (e.g. f1, f2... etc). keypad(st
 raw()     - Disable line buffering (program will take input as it comes rather than with return)
 move()    - Moves cursor to position
 getmaxyx()- Gets number of rows and cols. getmaxyx(stdscr,row,col) where stdscr is the screen, row and col are ints to store these numbers in.
+getyx()   - Gets y and x coordinates of the cursor. Format: getyx(Window* win, int y, int x)
+getparyx()- Gets beginning coordinates of sub-window relative to main menu. Same format as getyx().
+getbegyx()- Gets current window's beginning coordinates.
+getmaxyx()- Gets current window's max coordinates.
+scr_dump()- Dumps current screen contents to a specified file. Can be restored with scr_restore().
+putwin()  - 
 
 Output ncurses fxns:
 addch()   - Print single character with attributes      
@@ -34,4 +32,11 @@ getch()   - Get a character
 scanw()   - Get formatted input
 getstr()  - Get strings
 
-More reading to be done, use tldp website starting at section 7. 
+Windows in ncurses:
+Similar to files - WINDOW* my_win just like FILE* f. Check section 9 of website for example, explanation.
+delwin()  - Deallocates window. Format: delwin(Window* win)
+newwin()  - Creates window. Format: newwin(int height, int width, int starty, int startx)
+box() 	  - To display window. Format: box(Window* win, char vert, char horiz) where vert and horiz are default characters for the dividing lines.
+wrefresh()- Displays box. Similar to fflush(). Format: wrefresh(Window* win)
+wborder() - Specifies borders. Format: wborder(Window* win, followed by 8 chars for borders)
+COLS/LINES- COLS and LINES are initialized after initscr(). These are used for finding screen dimensions.

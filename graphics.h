@@ -2,6 +2,20 @@
 #define GRAPHICS_H
 #include <ncurses.h>
 #include <string.h>
+#include <stdlib.h>
+
+typedef struct _win_border_struct {
+	chtype 	ls, rs, ts, bs, 
+	 	tl, tr, bl, br;
+}WIN_BORDER;
+
+typedef struct _WIN_struct {
+	int startx, starty;
+	int height, width;
+	WIN_BORDER border;
+}WIN;
+
+WIN* win;
 
 /*
  * Catches window change signal (SIGWNCH)
@@ -17,4 +31,15 @@ void sig_wnch_handler();
  */
 void drawWindow();
 
+/*
+ * Creates box with WIN struct params
+ */
+void create_box(WIN* window, bool flag);
+
+/*
+ * Initializes WIN struct parameters
+ */
+void init_win_params(WIN *window);
+
+void testfunc();
 #endif

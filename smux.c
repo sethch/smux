@@ -30,9 +30,7 @@ void createShell(int argc, char* argv[]){
 int main(int argc, char* argv[]){
 	signal(SIGCHLD, sig_chld_handler);
 	signal(SIGWINCH, sig_wnch_handler);
-	while(1){
-
-	}
-	startup(argc, argv);	
+	testfunc();
+	//startup(argc, argv);	
 	return 0;
 }
