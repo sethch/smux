@@ -10,27 +10,37 @@ void sig_chld_handler(){
 }
 
 void startup(int argc, char* argv[]){
-	createShell(argc, argv);
-	print_smux_prompt();		
+	numterms = 1;
+	updateWindow();
+	int ch;
+	cbreak();
+	keypad(stdscr, TRUE);
+	while((ch = getch()) != KEY_F(1)){
+		switch ( ch ){
+			case KEY_LEFT:
+				numterms--;
+				updateWindow();
+			case KEY_RIGHT:
+				numterms++;
+				updateWindow();
+		}
+	}
 }
 
-void createShell(int argc, char* argv[]){
-	pid_t child = fork();
-	if(child < 0){
-		print_fork_failed();
-		exit(50);
+void updateWindow(){
+	clear();
+	initscr();
+	init_win_params();	
+	for(int i = 0; i < numterms; i++){
+		create_box(&win[i], TRUE);
 	}
-	else if(child == 0){
-		//execvp("/bin/bash", argv+1);
-		print_exec_failed();
-		exit(50);
-	}
+	refresh();
 }
 
 int main(int argc, char* argv[]){
 	signal(SIGCHLD, sig_chld_handler);
 	signal(SIGWINCH, sig_wnch_handler);
-	testfunc();
-	//startup(argc, argv);	
+	startup(argc, argv);
+	endwin();
 	return 0;
 }

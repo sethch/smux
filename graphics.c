@@ -6,28 +6,61 @@ void sig_wnch_handler(){
 	refresh();
 	clear();
 	
-	init_win_params(win);	
-	create_box(win, TRUE);
+	init_win_params();	
+	for(int i = 0; i < numterms; i++){
+		create_box(&win[i], TRUE);
+	}
 	refresh();
 }
 
 
-void init_win_params(WIN *window)
+void init_win_params()
 {
-	window->height = LINES-1;
-	window->width = COLS/2;
-	window->starty = 0;	
-	window->startx = 0;
-
-	window->border.ls = ' ';
-	window->border.rs = '|';
-	window->border.ts = ' ';
-	window->border.bs = ' ';
-	window->border.tl = ' ';
-	window->border.tr = '+';
-	window->border.bl = ' ';
-	window->border.br = '+';
-
+	assert(numterms > 0);
+	for(int i = 0; i < numterms; i++){
+		win[i].height = LINES;
+		win[i].width = COLS/numterms;
+		win[i].border.ts = ' ';
+		win[i].border.bs = ' ';		
+		win[i].startx = i*(COLS/numterms);
+		win[i].starty = 0; 
+		switch ( i ){
+			case 1:
+				win[i].border.ls = ' ';
+				win[i].border.rs = ' ';
+				win[i].border.tl = ' ';
+				win[i].border.tr = ' ';
+				win[i].border.bl = ' ';
+				win[i].border.br = ' ';
+				break;
+			default:
+				if(i == 0){
+					win[i].border.ls = ' ';
+					win[i].border.rs = '|';
+					win[i].border.tl = ' ';
+					win[i].border.tr = '|';
+					win[i].border.bl = ' ';
+					win[i].border.br = '|';	
+				}
+				else if(numterms > 2 && i < numterms - 1){
+					win[i].border.ls = '|';
+					win[i].border.rs = '|';
+					win[i].border.tl = '|';
+					win[i].border.tr = '|';
+					win[i].border.bl = '|';
+					win[i].border.br = '|';	
+				}
+				else{
+					win[i].border.ls = '|';
+					win[i].border.rs = ' ';
+					win[i].border.tl = '|';
+					win[i].border.tr = ' ';
+					win[i].border.bl = '|';
+					win[i].border.br = ' ';	
+				}
+				break;
+		}
+	}
 }
 
 void create_box(WIN *window, bool flag)
@@ -55,16 +88,6 @@ void create_box(WIN *window, bool flag)
 			for(i = x; i <= x + w; ++i)
 				mvaddch(j, i, ' ');
 	}			
-	refresh();
-
 }
 
-void testfunc(){
-	win = malloc(sizeof(WIN));	
-	initscr();
-	init_win_params(win);
-	create_box(win, TRUE);	
-	while(1){}
-	free(win);
-	endwin();
-}
+

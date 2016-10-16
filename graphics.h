@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 typedef struct _win_border_struct {
 	chtype 	ls, rs, ts, bs, 
@@ -10,12 +11,14 @@ typedef struct _win_border_struct {
 }WIN_BORDER;
 
 typedef struct _WIN_struct {
+	int windownum;
 	int startx, starty;
 	int height, width;
 	WIN_BORDER border;
 }WIN;
 
-WIN* win;
+WIN win[5];
+size_t numterms;
 
 /*
  * Catches window change signal (SIGWNCH)
@@ -39,7 +42,6 @@ void create_box(WIN* window, bool flag);
 /*
  * Initializes WIN struct parameters
  */
-void init_win_params(WIN *window);
+void init_win_params();
 
-void testfunc();
 #endif

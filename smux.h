@@ -21,9 +21,7 @@ void sig_chld_handler();
 void startup(int argc, char* argv[]);
 
 /*
- * Uses fork-exec to start a new instance of shell.
- * Ran as a background process (no waitpid).
- */ 
-void createShell(int argc, char* argv[]);
-
+ * Refreshes screen windows with updated numterms.
+ */
+void updateWindow();
 #endif

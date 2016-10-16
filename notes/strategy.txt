@@ -1,0 +1,22 @@
+This document is my thought process for actually running the shell on an ncurses window.
+
+October 14:
+According to http://stackoverflow.com/questions/25597475/shell-in-ncurses-window I need to create a pseudo-terminal and read it into ncurses.
+Notes from stackoverflow:
+1. Create a pty (pseudoterminal). You don't mention which OS you are using, but if it's POSIX based, man pty will help. Also look at openpty.
+2. The slave end of the pty needs to be connected to whatever you are running (e.g. the shell), whereas the master end needs to be connected to your terminal emulator.
+3. You'll thus have to fork(), and in the child, dup2 the slave fd onto the stdin, stdout and stderr.
+4. Then you need to connect the master fd in the parent to your ncurses environment (for output) and keyboard handling (for input).
+
+pty:
+1. pty is a pseudoterminal interface. It describes a bidirectional communication channel.
+2. One end of the channel is called the "master", the other end is the "slave".
+3. The "slave" provides an interface that behaves like a classical terminal. A process can open the slave end and then be driven by a program that has opened the master end.
+4. Anything that is written on the "master" end is provided to the process on the "slave" end as though it was input on a terminal. 
+5. Data flow between master and slave is handled asynchronously, which means that data written to the slave will be available at the master promptly but not immidietly. This means there will be a small processing delay between writing to the master and visualization at the slave.
+6. Two well known pseudoterminal API's: BSD and System V. BSD is now deprecated but still usable. Recommended to use System V AKA "UNIX 98" pseudoterminals. 
+
+UNIX 98:
+1. Master is opened by calling posix_openpt. This function opens the master clone device: /dev/ptmx. See "man 4 pts" and "man 3 posix_openpt" for more info. 
+2. After performing initializations for program, changing the ownership and permissions of the slave device is done by using grantpt(). The slave is unlocked with unlockpt(). The corresponding slave device can be opened by passing the name returned by ptsname in a call to open. "man 2 open", "man 3 ptsname", "man 3 grantpt", "man 3 unlockpt".
+3. There is a limit on the number of UNIX 98 pseudoterminals allowed. This limit is dynamically adjusted via /proc/sys/kernel/pty/max, and a corresponding file: /proc/sys/kernel/pty/nr tells you how many pseudoterminals are currently in use. For more info "man 5 proc".
