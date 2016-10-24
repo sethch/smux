@@ -24,7 +24,7 @@ void init_win_params()
 		win[i].border.bs = ' ';		
 		win[i].startx = i*(COLS/numterms);
 		win[i].starty = 0; 
-		switch ( i ){
+		switch ( numterms ){
 			case 1:
 				win[i].border.ls = ' ';
 				win[i].border.rs = ' ';
