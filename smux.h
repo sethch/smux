@@ -26,4 +26,19 @@ void startup(int argc, char* argv[]);
  * Refreshes screen windows with updated numterms.
  */
 void updateWindow();
+
+/*
+ * Deals with key presses when the "smux" key is pressed (TBD)
+ */
+void action(int actionnum);
+
+/*
+ * Will add a bidirectional channel for a new smux window
+ */
+void* addPseudo(void* arg);
+
+/*
+ * Will remove a the specified pty (parameters need to be added)
+ */
+void removePseudo();
 #endif
