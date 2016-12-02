@@ -14,11 +14,14 @@ typedef struct _WIN_struct {
 	int windownum;
 	int startx, starty;
 	int height, width;
+	int currx, curry;
 	WIN_BORDER border;
 }WIN;
 
 WIN win[5];
+//WINDOW* window[5];
 size_t numterms;
+//SCREEN* terms[5];
 
 /*
  * Catches window change signal (SIGWNCH)

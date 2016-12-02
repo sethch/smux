@@ -1,11 +1,12 @@
 #include "graphics.h"
+#include <signal.h>
 
 void sig_wnch_handler(){
 	endwin();
 	initscr();
 	refresh();
 	clear();
-	
+
 	init_win_params();	
 	for(int i = 0; i < numterms; i++){
 		create_box(&win[i], TRUE);
@@ -16,7 +17,9 @@ void sig_wnch_handler(){
 
 void init_win_params()
 {
-	assert(numterms > 0);
+	if(numterms == 0){
+		raise(SIGINT);
+	}
 	for(int i = 0; i < numterms; i++){
 		win[i].height = LINES;
 		win[i].width = COLS/numterms;
@@ -24,6 +27,9 @@ void init_win_params()
 		win[i].border.bs = ' ';		
 		win[i].startx = i*(COLS/numterms);
 		win[i].starty = 0; 
+		win[i].currx = i*(COLS/numterms);
+		win[i].curry = 0;
+		//window[i] = newwin(LINES, COLS/numterms, i*(COLS/numterms), 0);
 		switch ( numterms ){
 			case 1:
 				win[i].border.ls = ' ';
