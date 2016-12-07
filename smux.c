@@ -26,11 +26,32 @@ void sig_chld_handler(){
 	wait(&status);
 }
 
+void smux_stuff(){
+	printf("Press f5 to remove a window, f6 to add a window, f7 to switch windows and f8 to end the program\n");
+	keypad(stdscr, true);
+	cbreak();
+	int ch = getch();
+	switch(ch){
+		case 269: //f5 (to remove a window)
+			action(1);
+			break;
+		case 270: //f6 (to add a window)
+			action(2);
+			break;
+		case 271: //f7 (switch windows) 
+			action(3);
+			break;
+		case 272: //f8 (end program)
+			action(4);
+			break;
+	}
+	nocbreak();
+}
+
 void* addPseudo(void* arg){
 	char* buffer = NULL;
 	size_t *n = malloc(sizeof(size_t));
 	int ptnum = *(int*)arg;
-	int ch;
 	char Name[400];
 	int fdm = posix_openpt(O_RDWR);
 	grantpt(fdm);
@@ -42,8 +63,9 @@ void* addPseudo(void* arg){
 		struct termios slave_orig_term_settings; // Saved terminal settings
 		struct termios new_term_settings; // Current terminal settings
 		tcgetattr(fds, &slave_orig_term_settings);
-		new_term_settings = slave_orig_term_settings;
+		new_term_settings = slave_orig_term_settings;	
 		cfmakeraw(&new_term_settings);
+		new_term_settings.c_lflag |= ICANON | IEXTEN;
 		tcsetattr(fds, TCSANOW, &new_term_settings);
 		dup2(fds, 0);
 		dup2(fds, 1);
@@ -54,21 +76,13 @@ void* addPseudo(void* arg){
 		execv("/bin/bash", NULL);
 	}
 	else{
-		newterm(NULL, stdout, stdin);
 		close(fds);
 		char Output[500];
 		fd_set FDCopy;
-		/* Setup select(). */
 		char buffer[500];
 		char buffer2[500];	
-		/*move(win[turn].curry + 1, win[turn].currx);  	
-		win[turn].curry++;
-		*/
-		/*if(system("stty erase '^\?'") <= 0){
-			printw("system failed!");
-		}*/
-		while(1)
-		{       /* This loop continually looks for input on the descriptors. */
+		
+		while(1){       /* This loop continually looks for input on the descriptors. */
 			pthread_mutex_lock(&m);
 			if(turn == 10){
 				pthread_mutex_unlock(&m);
@@ -94,42 +108,16 @@ void* addPseudo(void* arg){
 		    /* Read from keyboard. */
 				memset(buffer2, 0, 500);
 				fgets(buffer2, 500, stdin);
+				buffer2[strlen(buffer2)-1] = '\0';
+				if(strcmp(buffer2, "smux_stuff") == 0){
+					smux_stuff();
+					continue;
+				}
+				buffer2[strlen(buffer2)-1] = '\n';
 				write(fdm, buffer2, strlen(buffer2));
 			}
-			int i = 0;	
-			//timeout(-1);
-			/*memset(buffer, 0, 500);
-			int x, y;
-			while((ch = getch()) != 10 && i < 499){
-					//buffer[i] = (char)ch;
-					i++;
-			}*/
-			//buffer[i] = '\0';
-			// termios can help set up line editing (eg.. turn backspace into deleting character)
-			/*move(win[turn].curry + 1, win[turn].currx);  	
-			win[turn].curry++;	
-			refresh();
-			*/
 		}
-		/*while(1){
-				ch = getch();
-				switch(ch){
-					case KEY_ENTER:
-						printw("\n");
-						refresh();	
-					case 269: //f5 (to remove a window)
-						action(1);
-					case 270: //f6 (to add a window)
-						action(2);
-					case 271: //f7 (switch windows) 
-						action(3);
-						goto threadstart;
-					case 272: //f8 (end program)
-						action(4);
-						goto threadstart;
-				}
-			}*/
-		}	
+	}
 	return NULL; 
 }
 
@@ -157,27 +145,21 @@ void action(int actionnum){
 
 void startup(int argc, char* argv[]){
 	numterms = 1;
-	//SCREEN * newterm(char *type, FILE *outfd, FILE *infd);	
-	//clear();
-	//initscr();
-	//newterm(NULL, stdout, 
-	//cbreak();
-	//noecho();
+	clear();
+	filter();
+	initscr();
+	reset_shell_mode();
 	updateWindow();	
 	int ptnum[1];
 	ptnum[0] = 0;
 	pthread_cond_init(&c, NULL);
 	pthread_create(&pts[numterms-1], NULL, addPseudo, (void*)ptnum);
-
 	for(int i = 0; i < numterms; i++){
 		pthread_join(pts[i], NULL);
 	}
-	//endwin();
 }
 
 void updateWindow(){
-	//clear();
-	//initscr();
 	init_win_params();	
 	for(int i = 0; i < numterms; i++){
 		create_box(&win[i], TRUE);
